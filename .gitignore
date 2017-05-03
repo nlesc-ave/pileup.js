@@ -29,7 +29,9 @@ node_modules
 
 # TypeScript
 typings
-dist
+dist/lib
+dist/pileup*
+dist/test*
 
 # Genomics
 /*.2bit
