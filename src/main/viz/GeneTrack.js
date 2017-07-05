@@ -80,7 +80,7 @@ class GeneTrack extends React.Component {
   }
 
   render(): any {
-    return <canvas />;
+    return <canvas onClick={this.handleClick.bind(this)} />;
   }
 
   componentDidMount() {
@@ -107,7 +107,19 @@ class GeneTrack extends React.Component {
 
   updateVisualization() {
     var canvas = ReactDOM.findDOMNode(this),
-        {width, height} = this.props,
+        {width, height} = this.props;
+
+    // Hold off until height & width are known.
+    if (width === 0) return;
+
+    d3utils.sizeCanvas(canvas, width, height);
+    var ctx = canvasUtils.getContext(canvas);
+    var dtx = dataCanvas.getDataContext(ctx);
+    this.renderScene(dtx);
+  }
+
+  renderScene(ctx: DataCanvasRenderingContext2D) {
+    var {width, height} = this.props,
         genomeRange = this.props.range;
 
     var range = new ContigInterval(genomeRange.contig, genomeRange.start, genomeRange.stop);
@@ -122,9 +134,6 @@ class GeneTrack extends React.Component {
             .range([0, width])
             .clamp(true);
 
-    d3utils.sizeCanvas(canvas, width, height);
-
-    var ctx = dataCanvas.getDataContext(canvasUtils.getContext(canvas));
     ctx.reset();
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -166,6 +175,24 @@ class GeneTrack extends React.Component {
 
       ctx.popObject();
     });
+  }
+
+  handleClick(reactEvent: any) {
+    var ev = reactEvent.nativeEvent,
+        x = ev.offsetX,
+        y = ev.offsetY,
+        canvas = ReactDOM.findDOMNode(this),
+        ctx = canvasUtils.getContext(canvas),
+        trackingCtx = new dataCanvas.ClickTrackingContext(ctx, x, y);
+    this.renderScene(trackingCtx);
+    if (trackingCtx.hit && trackingCtx.hit.length>0) {
+      //user provided function for displaying popup
+      if (typeof this.props.options.onGeneClicked  === "function") {
+        this.props.options.onGeneClicked(trackingCtx.hit);
+      } else {
+        console.log("Genes clicked: ", trackingCtx.hit);
+      }
+    }
   }
 }
 

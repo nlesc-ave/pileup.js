@@ -80,7 +80,7 @@ GeneTrack = (function (_React$Component) {_inherits(GeneTrack, _React$Component)
 
 
     function render() {
-      return _react2['default'].createElement('canvas', null);} }, { key: 'componentDidMount', value: 
+      return _react2['default'].createElement('canvas', { onClick: this.handleClick.bind(this) });} }, { key: 'componentDidMount', value: 
 
 
     function componentDidMount() {var _this = this;
@@ -108,6 +108,18 @@ GeneTrack = (function (_React$Component) {_inherits(GeneTrack, _React$Component)
     function updateVisualization() {
       var canvas = _reactDom2['default'].findDOMNode(this);var _props = 
       this.props;var width = _props.width;var height = _props.height;
+
+      // Hold off until height & width are known.
+      if (width === 0) return;
+
+      _d3utils2['default'].sizeCanvas(canvas, width, height);
+      var ctx = _canvasUtils2['default'].getContext(canvas);
+      var dtx = _dataCanvas2['default'].getDataContext(ctx);
+      this.renderScene(dtx);} }, { key: 'renderScene', value: 
+
+
+    function renderScene(ctx) {var _props2 = 
+      this.props;var width = _props2.width;var height = _props2.height;
       var genomeRange = this.props.range;
 
       var range = new _ContigInterval2['default'](genomeRange.contig, genomeRange.start, genomeRange.stop);
@@ -122,9 +134,6 @@ GeneTrack = (function (_React$Component) {_inherits(GeneTrack, _React$Component)
       range([0, width]).
       clamp(true);
 
-      _d3utils2['default'].sizeCanvas(canvas, width, height);
-
-      var ctx = _dataCanvas2['default'].getDataContext(_canvasUtils2['default'].getContext(canvas));
       ctx.reset();
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -164,7 +173,25 @@ GeneTrack = (function (_React$Component) {_inherits(GeneTrack, _React$Component)
 
         drawGeneName(ctx, clampedScale, geneLineY, gene, textIntervals);
 
-        ctx.popObject();});} }]);return GeneTrack;})(_react2['default'].Component);
+        ctx.popObject();});} }, { key: 'handleClick', value: 
+
+
+
+    function handleClick(reactEvent) {
+      var ev = reactEvent.nativeEvent, 
+      x = ev.offsetX, 
+      y = ev.offsetY, 
+      canvas = _reactDom2['default'].findDOMNode(this), 
+      ctx = _canvasUtils2['default'].getContext(canvas), 
+      trackingCtx = new _dataCanvas2['default'].ClickTrackingContext(ctx, x, y);
+      this.renderScene(trackingCtx);
+      if (trackingCtx.hit && trackingCtx.hit.length > 0) {
+        //user provided function for displaying popup
+        if (typeof this.props.options.onGeneClicked === "function") {
+          this.props.options.onGeneClicked(trackingCtx.hit);} else 
+        {
+          console.log("Genes clicked: ", trackingCtx.hit);}}} }]);return GeneTrack;})(_react2['default'].Component);
+
 
 
 
