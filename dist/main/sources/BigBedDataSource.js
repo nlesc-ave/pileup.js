@@ -19,12 +19,24 @@
 
 
 
+
+
+
 // human-readable name, e.g. "TP53"
 
 
 // Flow type for export.
-Object.defineProperty(exports, '__esModule', { value: true });var _slicedToArray = (function () {function sliceIterator(arr, i) {var _arr = [];var _n = true;var _d = false;var _e = undefined;try {for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {_arr.push(_s.value);if (i && _arr.length === i) break;}} catch (err) {_d = true;_e = err;} finally {try {if (!_n && _i['return']) _i['return']();} finally {if (_d) throw _e;}}return _arr;}return function (arr, i) {if (Array.isArray(arr)) {return arr;} else if (Symbol.iterator in Object(arr)) {return sliceIterator(arr, i);} else {throw new TypeError('Invalid attempt to destructure non-iterable instance');}};})();function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { 'default': obj };}var _underscore = require('underscore');var _underscore2 = _interopRequireDefault(_underscore);var _q = require('q');var _q2 = _interopRequireDefault(_q);var _backbone = require('backbone');var _ContigInterval = require('../ContigInterval');var _ContigInterval2 = _interopRequireDefault(_ContigInterval);var _Interval = require('../Interval');var _Interval2 = _interopRequireDefault(_Interval);var _dataBigBed = require('../data/BigBed');var _dataBigBed2 = _interopRequireDefault(_dataBigBed);
 
+
+
+
+
+
+
+
+// Flow type for export.
+Object.defineProperty(exports, '__esModule', { value: true });var _slicedToArray = (function () {function sliceIterator(arr, i) {var _arr = [];var _n = true;var _d = false;var _e = undefined;try {for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {_arr.push(_s.value);if (i && _arr.length === i) break;}} catch (err) {_d = true;_e = err;} finally {try {if (!_n && _i['return']) _i['return']();} finally {if (_d) throw _e;}}return _arr;}return function (arr, i) {if (Array.isArray(arr)) {return arr;} else if (Symbol.iterator in Object(arr)) {return sliceIterator(arr, i);} else {throw new TypeError('Invalid attempt to destructure non-iterable instance');}};})();function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { 'default': obj };}var _underscore = require('underscore');var _underscore2 = _interopRequireDefault(_underscore);var _q = require('q');var _q2 = _interopRequireDefault(_q);var _backbone = require('backbone');var _ContigInterval = require('../ContigInterval');var _ContigInterval2 = _interopRequireDefault(_ContigInterval);var _Interval = require('../Interval');var _Interval2 = _interopRequireDefault(_Interval);var _dataBigBed = require('../data/BigBed');var _dataBigBed2 = _interopRequireDefault(_dataBigBed); // requirement for jshint to pass
+/* exported Feature */var _dataFeature = require('../data/feature');var _dataFeature2 = _interopRequireDefault(_dataFeature);
 
 
 
@@ -68,7 +80,7 @@ function createFromBigBedFile(remoteSource) {
 
 
 
-  function getGenesInRange(range) {
+  function getFeaturesInRange(range) {
     if (!range) return [];
     var results = [];
     _underscore2['default'].each(genes, function (gene) {
@@ -106,7 +118,7 @@ function createFromBigBedFile(remoteSource) {
     rangeChanged: function rangeChanged(newRange) {
       fetch(newRange).done();}, 
 
-    getGenesInRange: getGenesInRange, 
+    getFeaturesInRange: getFeaturesInRange, 
 
     // These are here to make Flow happy.
     on: function on() {}, 

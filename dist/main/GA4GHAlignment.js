@@ -39,12 +39,13 @@ GA4GHAlignment /* implements Alignment */ = (function () {
   // https://github.com/ga4gh/schemas/blob/v0.5.1/src/main/resources/avro/reads.avdl
   function GA4GHAlignment(alignment) {_classCallCheck(this, GA4GHAlignment);
     this.alignment = alignment;
-    this.pos = alignment.alignment.position.position;
+    this.pos = parseInt(alignment.alignment.position.position);
     this.ref = alignment.alignment.position.referenceName;
     this.name = alignment.fragmentName;
 
     this.cigarOps = alignment.alignment.cigar.map(
-    function (_ref) {var operation = _ref.operation;var length = _ref.operationLength;return { op: OP_MAP[operation], length: length };});
+    function (_ref) {var operation = _ref.operation;var length = _ref.operationLength;return { op: OP_MAP[operation], length: parseInt(length) };});
+
     this._interval = new _ContigInterval2['default'](this.ref, 
     this.pos, 
     this.pos + this.getReferenceLength() - 1);}_createClass(GA4GHAlignment, [{ key: 'getKey', value: 
@@ -101,7 +102,7 @@ GA4GHAlignment /* implements Alignment */ = (function () {
 
 
 
-    // This is exposed as a static method to facilitate an optimization in GA4GHDataSource.
+    // This is exposed as a static method to facilitate an optimization in GA4GHAlignmentSource.
   }], [{ key: 'keyFromGA4GHResponse', value: function keyFromGA4GHResponse(alignment) {
       // this.alignment.id would be appealing here, but it's not actually unique!
       return alignment.fragmentName + ':' + alignment.readNumber;} }]);return GA4GHAlignment;})();

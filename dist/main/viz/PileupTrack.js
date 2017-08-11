@@ -13,6 +13,7 @@
 
 
 
+
 'react');var _react2 = _interopRequireDefault(_react);var _shallowEquals = require(
 'shallow-equals');var _shallowEquals2 = _interopRequireDefault(_shallowEquals);var _underscore = require(
 'underscore');var _underscore2 = _interopRequireDefault(_underscore);var _scale = require(
@@ -233,11 +234,6 @@ function opacityForQuality(quality) {
   // Round alpha to nearest 0.1
   alpha = Math.round(alpha * 10 + 0.5) / 10.0;
   return Math.min(1.0, alpha);}var 
-
-
-
-
-
 
 
 

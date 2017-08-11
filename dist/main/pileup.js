@@ -2,9 +2,10 @@
  * This exposes the main entry point into pileup.js.
  * 
  */
-'use strict';function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { 'default': obj };}var _underscore = require(
+'use strict';function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { 'default': obj };}var _types = require(
 
 
+'./types');var _underscore = require(
 
 'underscore');var _underscore2 = _interopRequireDefault(_underscore);var _react = require(
 'react');var _react2 = _interopRequireDefault(_react);var _reactDom = require(
@@ -14,14 +15,24 @@
 var _sourcesTwoBitDataSource = require('./sources/TwoBitDataSource');var _sourcesTwoBitDataSource2 = _interopRequireDefault(_sourcesTwoBitDataSource);var _sourcesBigBedDataSource = require(
 './sources/BigBedDataSource');var _sourcesBigBedDataSource2 = _interopRequireDefault(_sourcesBigBedDataSource);var _sourcesVcfDataSource = require(
 './sources/VcfDataSource');var _sourcesVcfDataSource2 = _interopRequireDefault(_sourcesVcfDataSource);var _sourcesBamDataSource = require(
-'./sources/BamDataSource');var _sourcesBamDataSource2 = _interopRequireDefault(_sourcesBamDataSource);var _sourcesGA4GHDataSource = require(
-'./sources/GA4GHDataSource');var _sourcesGA4GHDataSource2 = _interopRequireDefault(_sourcesGA4GHDataSource);var _sourcesEmptySource = require(
+'./sources/BamDataSource');var _sourcesBamDataSource2 = _interopRequireDefault(_sourcesBamDataSource);var _sourcesEmptySource = require(
 './sources/EmptySource');var _sourcesEmptySource2 = _interopRequireDefault(_sourcesEmptySource);
+
+// Data sources from json
+var _jsonGA4GHAlignmentJson = require('./json/GA4GHAlignmentJson');var _jsonGA4GHAlignmentJson2 = _interopRequireDefault(_jsonGA4GHAlignmentJson);var _jsonGA4GHVariantJson = require(
+'./json/GA4GHVariantJson');var _jsonGA4GHVariantJson2 = _interopRequireDefault(_jsonGA4GHVariantJson);var _jsonGA4GHFeatureJson = require(
+'./json/GA4GHFeatureJson');var _jsonGA4GHFeatureJson2 = _interopRequireDefault(_jsonGA4GHFeatureJson);
+
+// GA4GH sources
+var _sourcesGA4GHAlignmentSource = require('./sources/GA4GHAlignmentSource');var _sourcesGA4GHAlignmentSource2 = _interopRequireDefault(_sourcesGA4GHAlignmentSource);var _sourcesGA4GHVariantSource = require(
+'./sources/GA4GHVariantSource');var _sourcesGA4GHVariantSource2 = _interopRequireDefault(_sourcesGA4GHVariantSource);var _sourcesGA4GHFeatureSource = require(
+'./sources/GA4GHFeatureSource');var _sourcesGA4GHFeatureSource2 = _interopRequireDefault(_sourcesGA4GHFeatureSource);
 
 // Visualizations
 var _vizCoverageTrack = require('./viz/CoverageTrack');var _vizCoverageTrack2 = _interopRequireDefault(_vizCoverageTrack);var _vizGenomeTrack = require(
 './viz/GenomeTrack');var _vizGenomeTrack2 = _interopRequireDefault(_vizGenomeTrack);var _vizGeneTrack = require(
-'./viz/GeneTrack');var _vizGeneTrack2 = _interopRequireDefault(_vizGeneTrack);var _vizLocationTrack = require(
+'./viz/GeneTrack');var _vizGeneTrack2 = _interopRequireDefault(_vizGeneTrack);var _vizFeatureTrack = require(
+'./viz/FeatureTrack');var _vizFeatureTrack2 = _interopRequireDefault(_vizFeatureTrack);var _vizLocationTrack = require(
 './viz/LocationTrack');var _vizLocationTrack2 = _interopRequireDefault(_vizLocationTrack);var _vizPileupTrack = require(
 './viz/PileupTrack');var _vizPileupTrack2 = _interopRequireDefault(_vizPileupTrack);var _vizScaleTrack = require(
 './viz/ScaleTrack');var _vizScaleTrack2 = _interopRequireDefault(_vizScaleTrack);var _vizVariantTrack = require(
@@ -80,6 +91,41 @@ function create(elOrId, params) {
   _reactDom2['default'].render(_react2['default'].createElement(_Root2['default'], { referenceSource: referenceTrack.source, 
     tracks: vizTracks, 
     initialRange: params.range }), el);
+
+  //if the element doesn't belong to document DOM observe DOM to detect
+  //when it's attached
+  var observer = null;
+
+  if (!document.body.contains(el)) {
+    observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        if (mutation.type === 'childList') {
+          var added = false;
+          for (var i = 0; i < mutation.addedNodes.length; i++) {
+            //when added element is element where we visualize pileup
+            //or it contains element where we visualize pileup
+            //then we will have to update component
+            if (mutation.addedNodes[i] === el || mutation.addedNodes[i].contains(el)) {
+              added = true;}}
+
+
+          if (added) {
+            if (reactElement) {
+              reactElement.setState({ updateSize: true });} else 
+            {
+              throw 'ReactElement was not initialized properly';}}}});});
+
+
+
+
+
+    // configuration of the observer:
+    var config = { attributes: true, childList: true, characterData: true, subtree: true };
+
+    // start observing document
+    observer.observe(document, config);}
+
+
   return { 
     setRange: function setRange(range) {
       if (reactElement === null) {
@@ -103,7 +149,12 @@ function create(elOrId, params) {
       _reactDom2['default'].unmountComponentAtNode(el);
       reactElement = null;
       referenceTrack = null;
-      vizTracks = null;} };}
+      vizTracks = null;
+
+      // disconnect observer if it was created
+      if (observer !== null && observer !== undefined) {
+        observer.disconnect();}} };}
+
 
 
 
@@ -121,20 +172,31 @@ var pileup = {
   create: create, 
   formats: { 
     bam: _sourcesBamDataSource2['default'].create, 
-    ga4gh: _sourcesGA4GHDataSource2['default'].create, 
+    alignmentJson: _jsonGA4GHAlignmentJson2['default'].create, 
+    variantJson: _jsonGA4GHVariantJson2['default'].create, 
+    featureJson: _jsonGA4GHFeatureJson2['default'].create, 
     vcf: _sourcesVcfDataSource2['default'].create, 
     twoBit: _sourcesTwoBitDataSource2['default'].create, 
     bigBed: _sourcesBigBedDataSource2['default'].create, 
+    GAReadAlignment: _sourcesGA4GHAlignmentSource2['default'].create, 
+    GAVariant: _sourcesGA4GHVariantSource2['default'].create, 
+    GAFeature: _sourcesGA4GHFeatureSource2['default'].create, 
     empty: _sourcesEmptySource2['default'].create }, 
 
   viz: { 
     coverage: makeVizObject(_vizCoverageTrack2['default']), 
     genome: makeVizObject(_vizGenomeTrack2['default']), 
     genes: makeVizObject(_vizGeneTrack2['default']), 
+    features: makeVizObject(_vizFeatureTrack2['default']), 
     location: makeVizObject(_vizLocationTrack2['default']), 
     scale: makeVizObject(_vizScaleTrack2['default']), 
     variants: makeVizObject(_vizVariantTrack2['default']), 
     pileup: makeVizObject(_vizPileupTrack2['default']) }, 
+
+  'enum': { 
+    variants: { 
+      allelFrequencyStrategy: _types.AllelFrequencyStrategy } }, 
+
 
   version: '0.6.8' };
 

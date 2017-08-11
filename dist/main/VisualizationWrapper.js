@@ -29,6 +29,7 @@
 
 
 
+
 VisualizationWrapper = (function (_React$Component) {_inherits(VisualizationWrapper, _React$Component);
 
 
@@ -39,6 +40,7 @@ VisualizationWrapper = (function (_React$Component) {_inherits(VisualizationWrap
     _get(Object.getPrototypeOf(VisualizationWrapper.prototype), 'constructor', this).call(this, props);
     this.hasDragBeenInitialized = false;
     this.state = { 
+      updateSize: false, 
       width: 0, 
       height: 0 };}_createClass(VisualizationWrapper, [{ key: 'updateSize', value: 
 
@@ -47,6 +49,7 @@ VisualizationWrapper = (function (_React$Component) {_inherits(VisualizationWrap
     function updateSize() {
       var parentDiv = _reactDom2['default'].findDOMNode(this).parentNode;
       this.setState({ 
+        updateSize: false, 
         width: parentDiv.offsetWidth, 
         height: parentDiv.offsetHeight });} }, { key: 'componentDidMount', value: 
 
@@ -118,7 +121,13 @@ VisualizationWrapper = (function (_React$Component) {_inherits(VisualizationWrap
 
     function handleClick() {
       if (_libMinid32['default'].event.defaultPrevented) {
-        _libMinid32['default'].event.stopPropagation();}} }, { key: 'render', value: 
+        _libMinid32['default'].event.stopPropagation();}} }, { key: 'componentWillUpdate', value: 
+
+
+
+    function componentWillUpdate(nextProps, nextState) {
+      if (nextState.updateSize) {
+        this.updateSize();}} }, { key: 'render', value: 
 
 
 
@@ -128,6 +137,7 @@ VisualizationWrapper = (function (_React$Component) {_inherits(VisualizationWrap
       if (!range) {
         return _react2['default'].createElement(EmptyTrack, { className: component.displayName });}
 
+      var options = _underscore2['default'].extend({}, this.props.visualization.options, this.props.options);
 
       var el = _react2['default'].createElement(component, { 
         range: range, 
@@ -135,7 +145,7 @@ VisualizationWrapper = (function (_React$Component) {_inherits(VisualizationWrap
         referenceSource: this.props.referenceSource, 
         width: this.state.width, 
         height: this.state.height, 
-        options: this.props.visualization.options });
+        options: options });
 
 
       return _react2['default'].createElement('div', { className: 'drag-wrapper' }, el);} }]);return VisualizationWrapper;})(_react2['default'].Component);

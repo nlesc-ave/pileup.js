@@ -109,8 +109,13 @@ ContigInterval = (function () {
       return { 
         contig: this.contig, 
         start: this.start(), 
-        stop: this.stop() };}
+        stop: this.stop() };} }, { key: 'round', value: 
 
+
+
+    function round(size, zeroBased) {
+      var newInterval = this.interval.round(size, zeroBased);
+      return new ContigInterval(this.contig, newInterval.start, newInterval.stop);}
 
 
     // Comparator for use with Array.prototype.sort

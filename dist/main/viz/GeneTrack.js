@@ -87,7 +87,7 @@ GeneTrack = (function (_React$Component) {_inherits(GeneTrack, _React$Component)
       // Visualize new reference data as it comes in from the network.
       this.props.source.on('newdata', function (range) {
         _this.setState({ 
-          genes: _this.props.source.getGenesInRange(range) });});
+          genes: _this.props.source.getFeaturesInRange(range) });});
 
 
 

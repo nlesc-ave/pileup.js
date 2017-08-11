@@ -74,12 +74,10 @@ CoverageTiledCanvas = (function (_TiledCanvas) {_inherits(CoverageTiledCanvas, _
 
 
 
-
-
   // Draw coverage bins & mismatches
   _createClass(CoverageTiledCanvas, [{ key: 'heightForRef', value: function heightForRef(ref) {return this.height;} }, { key: 'update', value: function update(height, options) {// workaround for an issue in PhantomJS where height always comes out to zero.
-      this.height = Math.max(1, height);this.options = options;} }, { key: 'yScaleForRef', value: function yScaleForRef(ref) {var maxCoverage = this.cache.maxCoverageForRef(ref);var padding = 10; // TODO: move into style
-      return _scale2['default'].linear().domain([maxCoverage, 0]).range([padding, this.height - padding]).nice();} }, { key: 'render', value: function render(ctx, xScale, range) {var bins = this.cache.binsForRef(range.contig);var yScale = this.yScaleForRef(range.contig);var relaxedRange = new _ContigInterval2['default'](range.contig, range.start() - 1, range.stop() + 1);renderBars(ctx, xScale, yScale, relaxedRange, bins, this.options);} }]);return CoverageTiledCanvas;})(_TiledCanvas3['default']);function renderBars(ctx, xScale, yScale, 
+      this.height = Math.max(1, height);this.options = options;} }, { key: 'yScaleForRef', value: function yScaleForRef(ref, bottomPadding, topPadding) {var maxCoverage = this.cache.maxCoverageForRef(ref);return _scale2['default'].linear().domain([maxCoverage, 0]).range([bottomPadding, this.height - topPadding]).nice();} }, { key: 'render', value: function render(ctx, xScale, range) {var bins = this.cache.binsForRef(range.contig);var yScale = this.yScaleForRef(range.contig, 0, 30);var relaxedRange = new _ContigInterval2['default'](range.contig, range.start() - 1, range.stop() + 1);renderBars(ctx, xScale, yScale, relaxedRange, bins, this.options);} }]);return CoverageTiledCanvas;})(_TiledCanvas3['default']);function renderBars(ctx, xScale, 
+yScale, 
 range, 
 bins, 
 options) {
@@ -287,7 +285,7 @@ CoverageTrack = (function (_React$Component) {_inherits(CoverageTrack, _React$Co
       ctx.reset();
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-      var yScale = this.tiles.yScaleForRef(range.contig);
+      var yScale = this.tiles.yScaleForRef(range.contig, 10, 10);
 
       this.tiles.renderToScreen(ctx, range, this.getScale());
       this.renderTicks(ctx, yScale);

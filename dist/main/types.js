@@ -10,6 +10,7 @@
 'use strict';
 
 // Public API
+Object.defineProperty(exports, '__esModule', { value: true });
 
 
 
@@ -29,17 +30,29 @@
 
 
 
-// for css class and options
 
 
-/*
-TODO(danvk): kill types/types.js and use this
-export type GenomeRange = {
-  contig: string;
-  start: number;  // inclusive
-  stop: number;  // inclusive
-}
-*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -47,14 +60,14 @@ export type GenomeRange = {
 
 
 // BAM/BAI parsing
-
-
-
-
-
-
-
-
-// src/utils.js
-Object.defineProperty(exports, '__esModule', { value: true }); // This is a DataSource object
+var AllelFrequencyStrategy = { Minor: { name: "Minor" }, Major: { name: "Major" } };exports.AllelFrequencyStrategy = AllelFrequencyStrategy; // for css class and options
+/*
+TODO(danvk): kill types/types.js and use this
+export type GenomeRange = {
+  contig: string;
+  start: number;  // inclusive
+  stop: number;  // inclusive
+}
+*/ // src/utils.js
+// This is a DataSource object
 // data source

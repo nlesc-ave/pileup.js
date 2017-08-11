@@ -26,13 +26,17 @@ Root = (function (_React$Component) {_inherits(Root, _React$Component);
 
 
 
+  //it's an array of reactelement that are created for tracks
+
   function Root(props) {_classCallCheck(this, Root);
     _get(Object.getPrototypeOf(Root.prototype), 'constructor', this).call(this, props);
     this.state = { 
       contigList: this.props.referenceSource.contigList(), 
       range: null, 
-      settingsMenuKey: null };}_createClass(Root, [{ key: 'componentDidMount', value: 
+      updateSize: false, 
+      settingsMenuKey: null };
 
+    this.trackReactElements = [];}_createClass(Root, [{ key: 'componentDidMount', value: 
 
 
     function componentDidMount() {var _this = this;
@@ -84,13 +88,18 @@ Root = (function (_React$Component) {_inherits(Root, _React$Component);
 
 
 
-    function makeDivForTrack(key, track) {
+    function makeDivForTrack(key, track) {var _this3 = this;
+      //this should be improved, but I have no idea how (when trying to
+      //access this.trackReactElements wih string key, flow complains)
+      var intKey = parseInt(key);
       var trackEl = 
       _react2['default'].createElement(_VisualizationWrapper2['default'], { visualization: track.visualization, 
         range: this.state.range, 
         onRangeChange: this.handleRangeChange.bind(this), 
         source: track.source, 
-        referenceSource: this.props.referenceSource });
+        options: track.track.options, 
+        referenceSource: this.props.referenceSource, 
+        ref: function (c) {_this3.trackReactElements[intKey] = c;} });
 
 
       var trackName = track.track.name || '(track name)';
@@ -143,9 +152,9 @@ Root = (function (_React$Component) {_inherits(Root, _React$Component);
 
 
 
-    function render() {var _this3 = this;
+    function render() {var _this4 = this;
       // TODO: use a better key than index.
-      var trackEls = this.props.tracks.map(function (t, i) {return _this3.makeDivForTrack('' + i, t);});
+      var trackEls = this.props.tracks.map(function (t, i) {return _this4.makeDivForTrack('' + i, t);});
       return (
         _react2['default'].createElement('div', { className: 'pileup-root' }, 
         _react2['default'].createElement('div', { className: 'track controls' }, 
@@ -158,7 +167,17 @@ Root = (function (_React$Component) {_inherits(Root, _React$Component);
           onChange: this.handleRangeChange.bind(this) }))), 
 
 
-        trackEls));} }]);return Root;})(_react2['default'].Component);
+        trackEls));} }, { key: 'componentDidUpdate', value: 
+
+
+
+
+    function componentDidUpdate(prevProps, prevState) {
+      if (this.state.updateSize) {
+        for (var i = 0; i < this.props.tracks.length; i++) {
+          this.trackReactElements[i].setState({ updateSize: this.state.updateSize });}
+
+        this.state.updateSize = false;}} }]);return Root;})(_react2['default'].Component);
 
 
 

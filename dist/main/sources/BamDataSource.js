@@ -15,14 +15,7 @@
 // This reduces network activity while fetching.
 // TODO: tune this value
 'use strict';function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { 'default': obj };}var _underscore = require('underscore');var _underscore2 = _interopRequireDefault(_underscore);var _q = require('q');var _q2 = _interopRequireDefault(_q);var _backbone = require('backbone');var _ContigInterval = require('../ContigInterval');var _ContigInterval2 = _interopRequireDefault(_ContigInterval);var _dataBam = require('../data/bam');var _dataBam2 = _interopRequireDefault(_dataBam);var _RemoteFile = require('../RemoteFile');var _RemoteFile2 = _interopRequireDefault(_RemoteFile);var BASE_PAIRS_PER_FETCH = 100;
-
-function expandRange(range) {
-  var roundDown = function roundDown(x) {return x - x % BASE_PAIRS_PER_FETCH;};
-  var newStart = Math.max(1, roundDown(range.start())), 
-  newStop = roundDown(range.stop() + BASE_PAIRS_PER_FETCH - 1);
-
-  return new _ContigInterval2['default'](range.contig, newStart, newStop);}
-
+var ZERO_BASED = false;
 
 
 function createFromBamFile(remoteSource) {
@@ -77,7 +70,7 @@ function createFromBamFile(remoteSource) {
         return _q2['default'].when();}
 
 
-      interval = expandRange(interval);
+      interval = interval.round(BASE_PAIRS_PER_FETCH, ZERO_BASED);
       var newRanges = interval.complementIntervals(coveredRanges);
       coveredRanges.push(interval);
       coveredRanges = _ContigInterval2['default'].coalesce(coveredRanges);

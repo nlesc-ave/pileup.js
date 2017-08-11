@@ -36,7 +36,19 @@ Interval = (function () {
 
 
     function containsInterval(other) {
-      return this.contains(other.start) && this.contains(other.stop);} }, { key: 'clone', value: 
+      return this.contains(other.start) && this.contains(other.stop);}
+
+
+    // Rounds the interval to the nearest multiples of size.
+    // Optional minimum parameter determines the lowest
+    // possible value for the start of the resulting Interval.
+  }, { key: 'round', value: function round(size, zeroBased) {
+      var minimum = zeroBased ? 0 : 1;
+      var roundDown = function roundDown(x) {return x - x % size;};
+      var newStart = Math.max(minimum, roundDown(this.start)), 
+      newStop = roundDown(this.stop + size - 1);
+
+      return new Interval(newStart, newStop);} }, { key: 'clone', value: 
 
 
     function clone() {
