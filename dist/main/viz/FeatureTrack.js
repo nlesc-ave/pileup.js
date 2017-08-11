@@ -198,14 +198,18 @@ FeatureTrack = (function (_React$Component) {_inherits(FeatureTrack, _React$Comp
       var feature = _underscore2['default'].find(vFeatures, function (f) {return _utils2['default'].tupleRangeOverlaps([[f.start], [f.stop]], [[clickStart], [clickEnd]]);});
       var alert = window.alert || console.log;
       if (feature) {
-        // Construct a JSON object to show the user.
-        var messageObject = _underscore2['default'].extend(
-        { 
-          'id': feature.id, 
-          'range': feature.contig + ':' + feature.start + '-' + feature.stop, 
-          'score': feature.score });
+        if (typeof this.props.options.onFeatureClicked === "function") {
+          this.props.options.onFeatureClicked(feature);} else 
+        {
+          // Construct a JSON object to show the user.
+          var messageObject = _underscore2['default'].extend(
+          { 
+            'id': feature.id, 
+            'range': feature.contig + ':' + feature.start + '-' + feature.stop, 
+            'score': feature.score });
 
-        alert(JSON.stringify(messageObject, null, '  '));}} }]);return FeatureTrack;})(_react2['default'].Component);
+          alert(JSON.stringify(messageObject, null, '  '));}}} }]);return FeatureTrack;})(_react2['default'].Component);
+
 
 
 

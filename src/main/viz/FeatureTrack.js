@@ -198,14 +198,18 @@ class FeatureTrack extends React.Component {
     var feature = _.find(vFeatures, f => utils.tupleRangeOverlaps([[f.start], [f.stop]], [[clickStart], [clickEnd]]));
     var alert = window.alert || console.log;
     if (feature) {
-      // Construct a JSON object to show the user.
-      var messageObject = _.extend(
-        {
-          'id': feature.id,
-          'range': `${feature.contig}:${feature.start}-${feature.stop}`,
-          'score': feature.score
-        });
-      alert(JSON.stringify(messageObject, null, '  '));
+      if (typeof this.props.options.onFeatureClicked  === "function") {
+        this.props.options.onFeatureClicked(feature);
+      } else {
+        // Construct a JSON object to show the user.
+        var messageObject = _.extend(
+          {
+            'id': feature.id,
+            'range': `${feature.contig}:${feature.start}-${feature.stop}`,
+            'score': feature.score
+          });
+        alert(JSON.stringify(messageObject, null, '  '));
+      }
     }
   }
 }
