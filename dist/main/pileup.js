@@ -13,7 +13,8 @@
 
 // Data sources
 var _sourcesTwoBitDataSource = require('./sources/TwoBitDataSource');var _sourcesTwoBitDataSource2 = _interopRequireDefault(_sourcesTwoBitDataSource);var _sourcesBigBedDataSource = require(
-'./sources/BigBedDataSource');var _sourcesBigBedDataSource2 = _interopRequireDefault(_sourcesBigBedDataSource);var _sourcesVcfDataSource = require(
+'./sources/BigBedDataSource');var _sourcesBigBedDataSource2 = _interopRequireDefault(_sourcesBigBedDataSource);var _sourcesBigBedFeatureDataSource = require(
+'./sources/BigBedFeatureDataSource');var _sourcesBigBedFeatureDataSource2 = _interopRequireDefault(_sourcesBigBedFeatureDataSource);var _sourcesVcfDataSource = require(
 './sources/VcfDataSource');var _sourcesVcfDataSource2 = _interopRequireDefault(_sourcesVcfDataSource);var _sourcesBamDataSource = require(
 './sources/BamDataSource');var _sourcesBamDataSource2 = _interopRequireDefault(_sourcesBamDataSource);var _sourcesEmptySource = require(
 './sources/EmptySource');var _sourcesEmptySource2 = _interopRequireDefault(_sourcesEmptySource);
@@ -178,6 +179,7 @@ var pileup = {
     vcf: _sourcesVcfDataSource2['default'].create, 
     twoBit: _sourcesTwoBitDataSource2['default'].create, 
     bigBed: _sourcesBigBedDataSource2['default'].create, 
+    bigBedFeature: _sourcesBigBedFeatureDataSource2['default'].create, 
     GAReadAlignment: _sourcesGA4GHAlignmentSource2['default'].create, 
     GAVariant: _sourcesGA4GHVariantSource2['default'].create, 
     GAFeature: _sourcesGA4GHFeatureSource2['default'].create, 

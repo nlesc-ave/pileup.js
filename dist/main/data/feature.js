@@ -20,7 +20,7 @@ Feature = (function () {
     this.contig = feature.contig;
     this.start = feature.start;
     this.stop = feature.stop;
-    this.score = feature.score;}_createClass(Feature, [{ key: 'intersects', value: 
+    this.score = feature.score;}_createClass(Feature, [{ key: 'intersects', 
 
 
 
@@ -33,11 +33,23 @@ Feature = (function () {
 
 
 
+
+
+
+
+
+
+
+
+
+
+    // bed score column
+    value: 
 
 
     function intersects(range) {
-      return range.intersects(new _ContigInterval2['default'](this.contig, this.start, this.stop));} }], [{ key: 'fromGA4GH', value: function fromGA4GH(ga4ghFeature) {return new Feature({ id: ga4ghFeature.id, featureType: ga4ghFeature.featureType, contig: ga4ghFeature.referenceName, start: ga4ghFeature.start, stop: ga4ghFeature.end, score: 1000 });} }]);return Feature;})();
-
-
+      return range.intersects(new _ContigInterval2['default'](this.contig, this.start, this.stop));} }], [{ key: 'fromGA4GH', value: function fromGA4GH(ga4ghFeature) {return new Feature({ id: ga4ghFeature.id, featureType: ga4ghFeature.featureType, contig: ga4ghFeature.referenceName, start: ga4ghFeature.start, stop: ga4ghFeature.end, score: 1000 });} }, { key: 'fromBedFeature', value: function fromBedFeature(f) {var x = f.rest.split('\t');return new Feature({ id: x[0], // bed name column
+        featureType: x[4], // 2nd extra field of bed6+4
+        contig: f.contig, start: f.start, stop: f.stop, score: x[1] });} }]);return Feature;})();
 
 module.exports = Feature;

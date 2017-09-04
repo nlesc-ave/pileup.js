@@ -35,6 +35,18 @@ class Feature {
     });
   }
 
+  static fromBedFeature(f): Feature {
+    var x = f.rest.split('\t');
+    return new Feature({
+      id: x[0],  // bed name column
+      featureType: x[4], // 2nd extra field of bed6+4
+      contig: f.contig,
+      start: f.start,
+      stop: f.stop,
+      score: x[1], // bed score column
+    });
+  }
+
   intersects(range: ContigInterval<string>): boolean {
     return range.intersects(new ContigInterval(this.contig, this.start, this.stop));
   }

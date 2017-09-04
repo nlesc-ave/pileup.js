@@ -14,6 +14,7 @@ import ReactDOM from 'react-dom';
 // Data sources
 import TwoBitDataSource from './sources/TwoBitDataSource';
 import BigBedDataSource from './sources/BigBedDataSource';
+import BigBedFeatureDataSource from './sources/BigBedFeatureDataSource';
 import VcfDataSource from './sources/VcfDataSource';
 import BamDataSource from './sources/BamDataSource';
 import EmptySource from './sources/EmptySource';
@@ -178,6 +179,7 @@ var pileup = {
     vcf: VcfDataSource.create,
     twoBit: TwoBitDataSource.create,
     bigBed: BigBedDataSource.create,
+    bigBedFeature: BigBedFeatureDataSource.create,
     GAReadAlignment: GA4GHAlignmentSource.create,
     GAVariant: GA4GHVariantSource.create,
     GAFeature: GA4GHFeatureSource.create,
