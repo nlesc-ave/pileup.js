@@ -30,6 +30,12 @@ function parseCirTree(buffer) {
   return new _jbinary2['default'](buffer, _formatsBbi2['default'].TYPE_SET).read('CirTree');}
 
 
+// The "CIR" tree header contains size of a mapping from sequence -> block offsets.
+// It stands for "Chromosome Index R tree"
+function parseCirTreeHeader(buffer) {
+  return new _jbinary2['default'](buffer, _formatsBbi2['default'].TYPE_SET).read('CirTreeHeader');}
+
+
 // Extract a map from contig name --> contig ID from the bigBed header.
 function generateContigMap(header) {
   // Just assume it's a flat "tree" for now.
@@ -274,12 +280,19 @@ BigBed = (function () {
     this.cirTree = this.header.then(function (header) {
       // zoomHeaders[0].dataOffset is the next entry in the file.
       // We assume the "cirTree" section goes all the way to that point.
-      // Lacking zoom headers, assume it's 4k.
-      // TODO: fetch more than 4k if necessary
+      // Lacking zoom headers, download header of CirTree to determine length
       var start = header.unzoomedIndexOffset, 
       zoomHeader = header.zoomHeaders[0], 
       length = zoomHeader ? zoomHeader.dataOffset - start : 4096;
-      return _this4.remoteFile.getBytes(start, length).then(parseCirTree);});
+      if (zoomHeader) {
+        return _this4.remoteFile.getBytes(start, length).then(parseCirTree);} else 
+      {
+        // Download CirTreeHeader to find length of whole CirTree
+        return _this4.remoteFile.getBytes(start, 4 * 11).then(parseCirTreeHeader).then(function (treeHeader) {
+          var cirTreeLength = treeHeader.blockSize * treeHeader.itemCount.lo;
+          return _this4.remoteFile.getBytes(start, cirTreeLength);}).
+        then(parseCirTree);}});
+
 
 
     this.immediate = _q2['default'].all([this.header, this.cirTree, this.contigMap]).

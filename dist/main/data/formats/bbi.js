@@ -80,6 +80,17 @@ var TYPE_SET = {
     'count'] }, 
 
 
+  'CirTreeHeader': { 
+    _magic: ['const', 'uint32', 0x2468ACE0, true], 
+    blockSize: 'uint32', 
+    itemCount: 'uint64', 
+    startChromIx: 'uint32', 
+    startBase: 'uint32', 
+    endChromIx: 'uint32', 
+    endBase: 'uint32', 
+    fileSize: 'uint64', 
+    itemsPerSlot: 'uint32' }, 
+
   'CirTree': { 
     _magic: ['const', 'uint32', 0x2468ACE0, true], 
     blockSize: 'uint32', 
