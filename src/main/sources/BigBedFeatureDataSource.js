@@ -57,11 +57,19 @@ function createFromBigBedFile(remoteSource: BigBed): BigBedBigBedFeatureDataSour
     coveredRanges.push(interval);
     coveredRanges = ContigInterval.coalesce(coveredRanges);
 
-    return remoteSource.getFeatureBlocksOverlapping(interval).then(featureBlocks => {
+    return Q.all([
+      remoteSource.getFeatureBlocksOverlapping(interval),
+      remoteSource.getAutoSqlFields()
+    ]).then(([featureBlocks, autoSqlfields]) => {
+      var fieldNames = {};
+      var restOffset = 3;
+      autoSqlfields.forEach((f, i) => {
+        fieldNames[f] = i - restOffset;
+      });
       featureBlocks.forEach(fb => {
         coveredRanges.push(fb.range);
         coveredRanges = ContigInterval.coalesce(coveredRanges);
-        var features = fb.rows.map(Feature.fromBedFeature);
+        var features = fb.rows.map(f => Feature.fromBedFeature(f, fieldNames));
         features.forEach(feature => addFeature(feature));
         //we have new data from our internal block range
         o.trigger('newdata', fb.range);

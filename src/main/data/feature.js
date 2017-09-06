@@ -13,6 +13,10 @@ class Feature {
   start: number;
   stop: number;
   score: number;
+  strand: ?string;
+  source: ?string;
+  phase: ?string;
+  attributes: ?string;
 
   constructor(feature: Object) {
    this.id = feature.id;
@@ -21,6 +25,10 @@ class Feature {
    this.start = feature.start;
    this.stop = feature.stop;
    this.score = feature.score;
+   this.strand = feature.strand;
+   this.source = feature.source;
+   this.phase = feature.phase;
+   this.attributes = feature.attributes;
   }
 
   static fromGA4GH(ga4ghFeature: Object): Feature {
@@ -35,15 +43,19 @@ class Feature {
     });
   }
 
-  static fromBedFeature(f): Feature {
+  static fromBedFeature(f, fieldNames): Feature {
     var x = f.rest.split('\t');
     return new Feature({
-      id: x[0],  // bed name column
-      featureType: x[4], // 2nd extra field of bed6+4
+      id: x[fieldNames.name],  // bed name column
+      featureType: x[fieldNames.type], // 2nd extra field of bed6+4
       contig: f.contig,
       start: f.start,
       stop: f.stop,
-      score: x[1], // bed score column
+      score: parseInt(x[fieldNames.score]), // bed score column
+      strand: x[fieldNames.strand],
+      source: x[fieldNames.source], 
+      phase: x[fieldNames.phase], 
+      attributes: x[fieldNames.attributes]
     });
   }
 

@@ -6,7 +6,7 @@
 
 'use strict';
 
-import {stringAtOffset, typeAtOffset} from './helpers';
+import {typeAtOffset} from './helpers';
 
 var TYPE_SET = {
   'jBinary.littleEndian': true,
