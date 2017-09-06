@@ -6,7 +6,7 @@
 
 'use strict';
 
-import {typeAtOffset} from './helpers';
+import {stringAtOffset, typeAtOffset} from './helpers';
 
 var TYPE_SET = {
   'jBinary.littleEndian': true,
@@ -31,7 +31,8 @@ var TYPE_SET = {
     zoomHeaders: ['array', 'ZoomHeader', 'zoomLevels'],
 
     totalSummary: typeAtOffset('TotalSummary', 'totalSummaryOffset'),
-    chromosomeTree: typeAtOffset('BPlusTree', 'chromosomeTreeOffset')
+    chromosomeTree: typeAtOffset('BPlusTree', 'chromosomeTreeOffset'),
+    autoSql: typeAtOffset('string0', 'autoSqlOffset'),
   },
 
   'TotalSummary': {

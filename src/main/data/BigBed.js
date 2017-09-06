@@ -255,9 +255,14 @@ class ImmediateBigBed {
           }));
         });
   }
-
 }
 
+function parseAutoSqlFields(autoSql: string): string[] {
+  return autoSql.slice(autoSql.indexOf('(') + 2, autoSql.lastIndexOf(')') - 1).split('\n').map(line => {
+    var cols = line.trim().split(';')[0].split(/\s+/);
+    return cols[1];
+  });
+}
 
 class BigBed {
   remoteFile: RemoteFile;
@@ -298,6 +303,7 @@ class BigBed {
     this.immediate = Q.all([this.header, this.cirTree, this.contigMap])
         .then(([header, cirTree, contigMap]) => {
           var cm: {[key:string]: number} = contigMap;
+          header.autoSqlFields = parseAutoSqlFields(header.autoSql);
           return new ImmediateBigBed(this.remoteFile, header, cirTree, cm);
         });
 
@@ -323,6 +329,10 @@ class BigBed {
    */
   getFeatureBlocksOverlapping(range: ContigInterval<string>): Q.Promise<Array<BedBlock>> {
     return this.immediate.then(im => im.getFeatureBlocksOverlapping(range));
+  }
+
+  getAutoSqlFields(): Q.Promise<Array<string>> {
+    return this.immediate.then(im => im.header.autoSqlFields);
   }
 }
 

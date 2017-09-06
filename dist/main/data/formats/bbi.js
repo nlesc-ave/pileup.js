@@ -31,7 +31,8 @@ var TYPE_SET = {
     zoomHeaders: ['array', 'ZoomHeader', 'zoomLevels'], 
 
     totalSummary: (0, _helpers.typeAtOffset)('TotalSummary', 'totalSummaryOffset'), 
-    chromosomeTree: (0, _helpers.typeAtOffset)('BPlusTree', 'chromosomeTreeOffset') }, 
+    chromosomeTree: (0, _helpers.typeAtOffset)('BPlusTree', 'chromosomeTreeOffset'), 
+    autoSql: (0, _helpers.typeAtOffset)('string0', 'autoSqlOffset') }, 
 
 
   'TotalSummary': { 

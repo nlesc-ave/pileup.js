@@ -251,11 +251,16 @@ var ImmediateBigBed = (function () {
         // Convert chrIds to contig strings.
         return featureBlocks.map(function (fb) {return { 
             range: _this3.getContigInterval(fb.range), 
-            rows: _this3.attachContigToBedRows(fb.rows) };});});} }]);return ImmediateBigBed;})();var 
+            rows: _this3.attachContigToBedRows(fb.rows) };});});} }]);return ImmediateBigBed;})();
 
 
 
 
+
+function parseAutoSqlFields(autoSql) {
+  return autoSql.slice(autoSql.indexOf('(') + 2, autoSql.lastIndexOf(')') - 1).split('\n').map(function (line) {
+    var cols = line.trim().split(';')[0].split(/\s+/);
+    return cols[1];});}var 
 
 
 
@@ -298,6 +303,7 @@ BigBed = (function () {
     this.immediate = _q2['default'].all([this.header, this.cirTree, this.contigMap]).
     then(function (_ref2) {var _ref22 = _slicedToArray(_ref2, 3);var header = _ref22[0];var cirTree = _ref22[1];var contigMap = _ref22[2];
       var cm = contigMap;
+      header.autoSqlFields = parseAutoSqlFields(header.autoSql);
       return new ImmediateBigBed(_this4.remoteFile, header, cirTree, cm);});
 
 
@@ -322,7 +328,11 @@ BigBed = (function () {
      * anyway, this can be helpful for upstream caching.
      */ }, { key: 'getFeatureBlocksOverlapping', value: 
     function getFeatureBlocksOverlapping(range) {
-      return this.immediate.then(function (im) {return im.getFeatureBlocksOverlapping(range);});} }]);return BigBed;})();
+      return this.immediate.then(function (im) {return im.getFeatureBlocksOverlapping(range);});} }, { key: 'getAutoSqlFields', value: 
+
+
+    function getAutoSqlFields() {
+      return this.immediate.then(function (im) {return im.header.autoSqlFields;});} }]);return BigBed;})();
 
 
 
